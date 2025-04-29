@@ -17,13 +17,36 @@ function adicionar() {
   amigos.push(nome);
   input.value = "";
   atualizarLista();
+  input.focus();
+
 }
 
 function atualizarLista() {
-  const lista = document.getElementById("lista-amigos");
-  lista.textContent = amigos.join(", ");
+    const lista = document.getElementById("lista-amigos");
+    lista.innerHTML = "";
+  
+    amigos.forEach((amigo, index) => {
+      const item = document.createElement("div");
+      item.classList.add("amigo-item");
+  
+      const nome = document.createElement("span");
+      nome.textContent = amigo;
+      nome.classList.add("amigo-nome");
+  
+      const removerBtn = document.createElement("button");
+      removerBtn.textContent = "Remover";
+      removerBtn.classList.add("remover-btn");
+      removerBtn.onclick = () => {
+        amigos.splice(index, 1);
+        atualizarLista();
+      };
+  
+      item.appendChild(nome);
+      item.appendChild(removerBtn);
+      lista.appendChild(item);
+    });
 }
-
+  
 function sortear() {
     if (amigos.length < 2) {
       alert("Adicione pelo menos 2 amigos para sortear.");
@@ -62,15 +85,6 @@ function sortear() {
       alert("Não foi possível sortear sem repetições. Tente novamente.");
     }
   }
-  
-  function embaralhar(lista) {
-    for (let i = lista.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [lista[i], lista[j]] = [lista[j], lista[i]];
-    }
-    return lista;
-  }
-  
   
   function embaralhar(lista) {
     for (let i = lista.length - 1; i > 0; i--) {
