@@ -56,3 +56,9 @@ function sortear() {
   document.getElementById("lista-sorteio").innerHTML = resultado;
 }
 
+function reiniciar() {
+  amigos = [];
+  document.getElementById("nome-amigo").value = "";
+  document.getElementById("lista-amigos").textContent = "";
+  document.getElementById("lista-sorteio").innerHTML = "";
+}
