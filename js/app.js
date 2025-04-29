@@ -25,37 +25,61 @@ function atualizarLista() {
 }
 
 function sortear() {
-  if (amigos.length < 2) {
-    alert("Adicione pelo menos 2 amigos para sortear.");
-    return;
-  }
-
-  let sorteio = [...amigos];
-  let resultado = "";
-
-  for (let i = 0; i < amigos.length; i++) {
-    const amigo = amigos[i];
-
-    // Evita que alguém tire a si mesmo
-    let possibilidades = sorteio.filter(nome => nome !== amigo);
-
-    if (possibilidades.length === 0) {
-      // Se não tiver possibilidades válidas, reinicia o sorteio
-      sortear();
+    if (amigos.length < 2) {
+      alert("Adicione pelo menos 2 amigos para sortear.");
       return;
     }
-
-    const index = Math.floor(Math.random() * possibilidades.length);
-    const sorteado = possibilidades[index];
-
-    resultado += `${amigo} → ${sorteado}<br>`;
-    // Remove o nome sorteado da lista para que ele não seja sorteado de novo
-    sorteio = sorteio.filter(nome => nome !== sorteado);
+  
+    let maxTentativas = 100;
+    let sorteadoComSucesso = false;
+    let resultado = "";
+  
+    for (let tentativas = 0; tentativas < maxTentativas; tentativas++) {
+      const sorteadores = embaralhar([...amigos]);
+      const sorteados = embaralhar([...amigos]);
+      let valido = true;
+  
+      for (let i = 0; i < sorteadores.length; i++) {
+        if (sorteadores[i] === sorteados[i]) {
+          valido = false;
+          break;
+        }
+      }
+  
+      if (valido) {
+        resultado = "";
+        for (let i = 0; i < sorteadores.length; i++) {
+          resultado += `${sorteadores[i]} → ${sorteados[i]}<br>`;
+        }
+        sorteadoComSucesso = true;
+        break;
+      }
+    }
+  
+    if (sorteadoComSucesso) {
+      document.getElementById("lista-sorteio").innerHTML = resultado;
+    } else {
+      alert("Não foi possível sortear sem repetições. Tente novamente.");
+    }
   }
-
-  document.getElementById("lista-sorteio").innerHTML = resultado;
-}
-
+  
+  function embaralhar(lista) {
+    for (let i = lista.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [lista[i], lista[j]] = [lista[j], lista[i]];
+    }
+    return lista;
+  }
+  
+  
+  function embaralhar(lista) {
+    for (let i = lista.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [lista[i], lista[j]] = [lista[j], lista[i]];
+    }
+    return lista;
+  }
+  
 function reiniciar() {
   amigos = [];
   document.getElementById("nome-amigo").value = "";
